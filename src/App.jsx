@@ -38,9 +38,13 @@ function App() {
   }, [flippedCards]);
   const reset = () => {
     setPairs([]);
+    setFlippedCards([]);
+    setTimeout(() => {
+      setEmojiPack((prew) => prew.sort(() => Math.random() - 0.5));
+    }, 500);
   };
   return (
-    <>
+    <div className="app">
       <div className="board">
         {emojiPack.map((emoji, index) => {
           return (
@@ -65,8 +69,15 @@ function App() {
           );
         })}
       </div>
-      <button onClick={()=>{reset()}}>restart</button>
-    </>
+      <button
+      className="restart"
+        onClick={() => {
+          reset();
+        }}
+      >
+        restart
+      </button>
+    </div>
   );
 }
 
