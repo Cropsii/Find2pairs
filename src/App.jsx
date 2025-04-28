@@ -41,7 +41,7 @@ function App() {
     setFlippedCards([]);
     setTimeout(() => {
       setEmojiPack((prew) => prew.sort(() => Math.random() - 0.5));
-    }, 500);
+    }, 100);
   };
   return (
     <div className="app">
