@@ -20,7 +20,7 @@ function App() {
     setTimeout(() => {
       setBlink(false);
     }, 700);
-  }, []);
+  }, [blink]);
   useEffect(() => {
     if (flippedCards.length == 2) {
       setLock(true);
@@ -37,10 +37,11 @@ function App() {
     }
   }, [flippedCards]);
   const reset = () => {
-    setPairs([]);
+    setEmojiPack((prew) => prew.sort(() => Math.random() - 0.5));
+    setBlink(true);
     setFlippedCards([]);
     setTimeout(() => {
-      setEmojiPack((prew) => prew.sort(() => Math.random() - 0.5));
+      setPairs([]);
     }, 100);
   };
   return (
@@ -70,7 +71,7 @@ function App() {
         })}
       </div>
       <button
-      className="restart"
+        className="restart"
         onClick={() => {
           reset();
         }}
