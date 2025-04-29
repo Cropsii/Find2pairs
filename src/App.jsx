@@ -24,7 +24,7 @@ function App() {
     if (!timeStarted.current) {
       timeStarted.current = true;
       timeRefId.current = setInterval(() => {
-        setTime((prev) => +(prev + 0.1).toFixed(2));
+        setTime((prev) => +(prev + 0.01).toFixed(2));
       }, 10);
     }
   };
