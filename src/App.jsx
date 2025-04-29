@@ -38,7 +38,7 @@ function App() {
     }
   }, [flippedCards]);
   const reset = () => {
-    setEmojiPack((prew) => prew.sort(() => Math.random() - 0.5));
+    setEmojiPack((prev) => prev.sort(() => Math.random() - 0.5));
     setBlink(true);
     setFlippedCards([]);
     setScore(0);
@@ -50,7 +50,7 @@ function App() {
     if (flippedCards.includes(index)) {
       return;
     } else {
-      setScore((prew) => (prew += 1));
+      setScore((prev) => (prev += 1));
     }
   };
   return (
