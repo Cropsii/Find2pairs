@@ -29,7 +29,7 @@ body {
 .timer {
   padding: 1rem;
   color: var(--textMain);
-  background: radial-gradient(circle 100px at left top, #ffffff, #f0f0f090);
+  background: radial-gradient(circle 200px at left top, #ffffff, #f0f0f090);
   text-align: center;
   place-self: center;
   border-radius: 20px;
