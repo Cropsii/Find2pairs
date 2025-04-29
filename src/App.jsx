@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -9,20 +9,30 @@ function App() {
   const [flippedCards, setFlippedCards] = useState([]);
   const [lock, setLock] = useState(false);
   const [pairs, setPairs] = useState([]);
-  const [blink, setBlink] = useState(true);
+  const [blink, setBlink] = useState(false);
   const [score, setScore] = useState(0);
+  const [resting, setResting] = useState(false);
+  const [time, setTime] = useState(0);
+  const timeStarted = useRef(false);
+  const timeRefId = useRef(null);
+
   const flip = (index) => {
     if (flippedCards.includes(index) || lock) {
       return;
     }
     setFlippedCards([...flippedCards, index]);
+    if (!timeStarted.current) {
+      timeStarted.current = true;
+      timeRefId.current = setInterval(() => {
+        setTime((prev) => +(prev + 0.1).toFixed(2));
+      }, 10);
+    }
   };
+
   useEffect(() => {
-    setTimeout(() => {
-      setBlink(false);
-    }, 700);
-  }, [blink]);
-  useEffect(() => {
+    if (pairs.length == 12) {
+      stopTimer();
+    }
     if (flippedCards.length == 2) {
       setLock(true);
       const [firsIndex, secondIndex] = flippedCards;
@@ -32,19 +42,35 @@ function App() {
         setLock(false);
       } else
         setTimeout(() => {
-          setFlippedCards([]);
           setLock(false);
+          setFlippedCards([]);
         }, 500);
     }
   }, [flippedCards]);
+  const stopTimer = () => {
+    clearInterval(timeRefId.current);
+    timeStarted.current = false;
+  };
   const reset = () => {
-    setEmojiPack((prev) => prev.sort(() => Math.random() - 0.5));
-    setBlink(true);
+    if (resting) return;
+
+    setResting(true);
+    setPairs([]);
     setFlippedCards([]);
     setScore(0);
+
+    const shuffled = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+    setEmojiPack(shuffled);
+    setBlink(true);
+    stopTimer();
+    setTime(0);
     setTimeout(() => {
-      setPairs([]);
-    }, 100);
+      setBlink(false);
+    }, 700);
+
+    setTimeout(() => {
+      setResting(false);
+    }, 1000);
   };
   const upScore = (index) => {
     if (flippedCards.includes(index)) {
@@ -53,9 +79,13 @@ function App() {
       setScore((prev) => (prev += 1));
     }
   };
+  const startTimer = () => {};
   return (
     <div className="app">
-      <div className="score">{score}</div>
+      <div className="result-container">
+        <div className="score">{score}</div>
+        <div className="timer">{time.toFixed(2)}</div>
+      </div>
       <div className="board">
         {emojiPack.map((emoji, index) => {
           return (
