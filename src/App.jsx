@@ -10,6 +10,7 @@ function App() {
   const [lock, setLock] = useState(false);
   const [pairs, setPairs] = useState([]);
   const [blink, setBlink] = useState(true);
+  const [score, setScore] = useState(0);
   const flip = (index) => {
     if (flippedCards.includes(index) || lock) {
       return;
@@ -40,12 +41,21 @@ function App() {
     setEmojiPack((prew) => prew.sort(() => Math.random() - 0.5));
     setBlink(true);
     setFlippedCards([]);
+    setScore(0);
     setTimeout(() => {
       setPairs([]);
     }, 100);
   };
+  const upScore = (index) => {
+    if (flippedCards.includes(index)) {
+      return;
+    } else {
+      setScore((prew) => (prew += 1));
+    }
+  };
   return (
     <div className="app">
+      <div className="score">{score}</div>
       <div className="board">
         {emojiPack.map((emoji, index) => {
           return (
@@ -54,6 +64,7 @@ function App() {
               key={index}
               onClick={() => {
                 flip(index);
+                upScore(index);
               }}
             >
               <div
