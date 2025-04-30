@@ -13,11 +13,13 @@ function App() {
   const [score, setScore] = useState(0);
   const [resting, setResting] = useState(false);
   const [time, setTime] = useState(0);
+  const [open, setOpen] = useState(false);
+
   const timeStarted = useRef(false);
   const timeRefId = useRef(null);
 
   const flip = (index) => {
-    if (flippedCards.includes(index) || lock) {
+    if (flippedCards.includes(index) || pairs.includes(index) || lock) {
       return;
     }
     setFlippedCards([...flippedCards, index]);
@@ -30,7 +32,8 @@ function App() {
   };
 
   useEffect(() => {
-    if (pairs.length == 12) {
+    if (pairs.length === emojiPack.length) {
+      switchPopUp();
       stopTimer();
     }
     if (flippedCards.length == 2) {
@@ -52,8 +55,8 @@ function App() {
     timeStarted.current = false;
   };
   const reset = () => {
+    setOpen(false);
     if (resting) return;
-
     setResting(true);
     setPairs([]);
     setFlippedCards([]);
@@ -73,13 +76,15 @@ function App() {
     }, 1000);
   };
   const upScore = (index) => {
-    if (flippedCards.includes(index)) {
+    if (flippedCards.includes(index) || pairs.includes(index) || lock) {
       return;
     } else {
       setScore((prev) => (prev += 1));
     }
   };
-  const startTimer = () => {};
+  const switchPopUp = () => {
+    setOpen((open) => !open);
+  };
   return (
     <div className="app">
       <div className="result-container">
@@ -87,6 +92,23 @@ function App() {
         <div className="timer">{time.toFixed(2)}</div>
       </div>
       <div className="board">
+        <div className={`popup ${open ? "show" : ""}`}>
+          <div className="popup-content">
+            <h2>🎉 Победа!</h2>
+            <p>Вы нашли все пары за {time.toFixed(2)} сек!</p>
+            <div className="popup-buttons">
+              <button onClick={() => reset()} className="popup-btn restart-btn">
+                Начать заново
+              </button>
+              <button
+                onClick={() => switchPopUp()}
+                className="popup-btn close-btn"
+              >
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </div>
         {emojiPack.map((emoji, index) => {
           return (
             <div
